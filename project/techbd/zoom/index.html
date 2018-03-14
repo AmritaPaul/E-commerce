@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head>
+
+    <link href="css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+<body>
+
+
+	<div class="bzoom_wrap">
+        <ul id="bzoom">
+            <li>
+                <img class="bzoom_thumb_image" src="https://unsplash.it/375/500?image=201" title="first img" />
+                <img class="bzoom_big_image" src="https://unsplash.it/750/1000?image=201"/>
+            </li>
+          
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="./js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="./js/jqzoom.js"></script>
+<script type="text/javascript">
+$("#bzoom").zoom({
+	zoom_area_width: 300,
+    autoplay_interval :3000,
+    small_thumbs :0,
+    autoplay : false
+});
+</script>
+
+
+</html>

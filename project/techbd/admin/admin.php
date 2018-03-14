@@ -1,0 +1,156 @@
+
+<?php
+
+include("../login/session.php");
+if($login_role=='user'){
+ header('location:../user/user.php');
+}
+if($login_role=='moderator'){
+ header('location:../moderator/moderator.php');
+}
+
+?>
+
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Rubik" rel="stylesheet">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="../search/style5.css" type="text/css">
+
+<link rel="icon" type="../image/png/jpg" href="../image/logo.jpg"/>
+<link rel="stylesheet" type="text/css" href="../style.css">
+<link rel="stylesheet" type="text/css" href="../user/style1.css">
+
+
+
+<script type="text/javascript">
+function validate() {
+
+var B = document.getElementById("search");
+if(B.value== "" || B.value== null) {
+alert("Please enter a product name or id or brand or price ");
+B.style.border = "2px solid red";
+return false;
+} else {
+B.style.border = "";
+}
+}
+</script></head>
+  
+
+</script>
+
+
+</head>
+<body>
+<div id="container1">
+<header>
+<?php
+			include('../search/head.php');
+		?>
+</header>
+
+
+<?php
+			include('../menu/admin.php');
+		?>
+<div id="display1">
+<center>
+<p style="color:green;"><b>Wellcome to <b ><?php echo $login_role;?></b>  &nbsp;&nbsp;&nbsp;&nbsp;User name is:<b> <?php echo $login_session;?></b> and  Role  :<b><?php echo $login_role;?></b></p></center>
+<br>
+<center><h2 style="color:red;">Orderlist</h2></center>
+<?php
+include("../db/config.php");
+
+$page=0;
+$show=5;
+if(isset($_POST["page"]))
+{
+ $page=$_POST["page"];
+ $page=($page*$show)-$show;
+}
+$sql="SELECT * FROM `payment` ORDER BY `pay_id` DESC   limit $page,$show";
+$res = mysqli_query($myconn,$sql);
+echo'<table width="100%" border="1px" cellspacing="0" bgcolor="#0066FF" cellpadding="6">
+<tr>
+
+<td width="20%" valign="top"> &nbsp;&nbsp;&nbsp;Order Id</td>
+<td width="20%" valign="top"> &nbsp;&nbsp;&nbsp; TrxId</td>
+<td width="20%" valign="top"> &nbsp;&nbsp;&nbsp;Status  </td>
+<td width="60%" valign="top"> &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;Action</td>
+</tr></table>';
+while($row=mysqli_fetch_array($res))
+{
+$price= $row['g_price'];
+$trxid= $row['trxid'];
+$status=$row['status'];
+$id=$row['cu_id'];
+if($status==0){
+	$status=" Delivery Incomplete";
+	
+}
+else{
+	$status= "Delivery Complete";
+}
+ ?>
+   <?php echo' <table width="100%" border="1px" bgcolor="#CCCCFF" cellspacing="0" cellpadding="6">
+
+<tr>
+	<td width="20%" valign="top">'.$price.'</td>
+ 	<td width="20%" valign="top">'.$trxid.' </td>
+	
+	<td width="20%" valign="top"> &nbsp;&nbsp;&nbsp;'.$status.' </td>
+   <td width="10%" valign="top"><a href="../user/actiond.php?id='.$trxid.'"style="color:red;"> &nbsp;&nbsp;&nbsp;<input type="image" src="../image/button_action.png" width="60px" height="20px" "> </td></a>
+   <td width="10%" valign="top"><a href="../user/orderdetails.php?id='.$trxid.'"style="color:red;"> &nbsp;&nbsp;&nbsp;<input type="image" src="../image/button_details.png" width="60px" height="20px" "> </td></a>
+   <td width="10%" valign="top"><a href="../user/massage.php?id='.$id.'"style="color:red;"> &nbsp;&nbsp;&nbsp;<input type="image" src="../image/button_massage.png" width="60px" height="20px" "> </td></a>
+   <td width="10%" valign="top"><a href="../user/deleteor.php?id='.$trxid.'"style="color:red;"> &nbsp;&nbsp;&nbsp;<input type="image" src="../image/button_delete.png" width="60px" height="20px" onclick="return del()"> </td></a>
+	
+
+</tr>
+
+
+</table>
+
+';?>
+    <?php
+}
+$sql1="SELECT * FROM payment ORDER BY pay_id DESC ";
+$res1 = mysqli_query($myconn,$sql1);
+$count=mysqli_num_rows($res1);
+$a=$count/$show;
+$a=ceil($a);
+echo "<br><br><br><br><br><br>";
+?>
+<form method="post">&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;
+<?php
+for($b=1;$b<=$a;$b++)
+{
+ ?>
+    <input type="submit" value="<?php echo $b;?>" name="page">
+    <?php
+}?>
+
+
+
+
+</div>
+<div id="footer1">
+<?php
+			include('../footer/footer.php');
+		?>
+
+
+
+</div>
+
+</div>
+</body>
+</html>
